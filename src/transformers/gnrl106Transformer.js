@@ -7,14 +7,14 @@ const COLUMN_MAP = {
   birthDate: 3,
   enrollDate: 6,
   exitDate: 7,
-  assessments: 10,
-  services: 11,
-  caseNotes: 12,
-  assignedStaff: 13,
-  unitAssignment: 14,
-  bedAssignment: 15,
-  occupancyStart: 16,
-  occupancyEnd: 17,
+  assessments: 11,
+  services: 12,
+  caseNotes: 13,
+  assignedStaff: 15,
+  unitAssignment: 17,
+  bedAssignment: 18,
+  occupancyStart: 19,
+  occupancyEnd: 20,
 };
 
 function transformToContacts(dataRows) {
@@ -52,6 +52,11 @@ function transformToRosters(dataRows, contactIdMap) {
     const programName = row[COLUMN_MAP.programName];
 
     if (contactSalesforceId && enrollDate && programName) {
+      let assignedStaffValue = row[COLUMN_MAP.assignedStaff];
+      if (typeof assignedStaffValue === "string") {
+        assignedStaffValue = assignedStaffValue.replace(/\n/g, "; ");
+      }
+
       const enrollDateKey = enrollDate.toISOString().split("T")[0];
       rosterRecords.push({
         Name: programName,
@@ -62,7 +67,7 @@ function transformToRosters(dataRows, contactIdMap) {
         Assesments__c: row[COLUMN_MAP.assessments],
         Services__c: row[COLUMN_MAP.services],
         Case_Notes__c: row[COLUMN_MAP.caseNotes],
-        Assigned_Staff__c: row[COLUMN_MAP.assignedStaff],
+        Assigned_Staff__c: assignedStaffValue,
         Unit_Assignment__c: row[COLUMN_MAP.unitAssignment],
         Bed_Assignment__c: row[COLUMN_MAP.bedAssignment],
         Occupancy_Start__c: excelDateToJSDate(row[COLUMN_MAP.occupancyStart]),

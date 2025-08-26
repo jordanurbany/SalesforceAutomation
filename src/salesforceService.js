@@ -1,10 +1,6 @@
-// src/salesforceService.js
 const jsforce = require("jsforce");
 
-/**
- * Handles connection and authentication with Salesforce.
- * ADAPTED from your loginToSalesforce function.
- */
+// Handles connection and authentication with Salesforce.
 async function login(loginUrl, username, password) {
   console.log("\nLogging in to Salesforce...");
   const conn = new jsforce.Connection({ loginUrl });
@@ -20,10 +16,7 @@ async function logout(conn) {
   }
 }
 
-/**
- * Performs a bulk upsert operation in batches.
- * MOVED HERE - Your exact upsertInBatches logic, now a generic utility.
- */
+//Performs a bulk upsert operation in batches.
 async function upsertInBatches(
   conn,
   objectName,

@@ -3,10 +3,6 @@ const xlsx = require("xlsx");
 const fs = require("fs");
 const path = require("path");
 
-/**
- * Your final, most robust function to convert Excel dates into a format Salesforce understands.
- * MOVED HERE - UNCHANGED.
- */
 function excelDateToJSDate(serial) {
   if (!serial || (typeof serial === "string" && serial.trim().length < 8)) {
     return null;
@@ -27,34 +23,73 @@ function excelDateToJSDate(serial) {
   return null;
 }
 
-/**
- * Generic function to read all .xlsx files from a specified directory.
- * ADAPTED from your original readAllExcelData function.
- */
+// A simple, robust CSV line parser that correctly handles quoted fields.
+function parseCsvLine(line) {
+  const result = [];
+  let currentField = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === "," && !inQuotes) {
+      result.push(currentField);
+      currentField = "";
+    } else {
+      currentField += char;
+    }
+  }
+  result.push(currentField); // Add the last field
+  return result;
+}
+
+// FINAL, RESILIENT VERSION: Now correctly parses CSV files.
 function readAndAggregateData(directoryPath, rowsToSkip) {
   console.log(`\nReading and aggregating data from: ${directoryPath}`);
   let allDataRows = [];
 
-  const fileNames = fs
-    .readdirSync(directoryPath)
-    .filter((file) => path.extname(file).toLowerCase() === ".xlsx");
+  const fileNames = fs.readdirSync(directoryPath).filter((file) => {
+    const lower = file.toLowerCase();
+    return lower.endsWith(".xlsx") || lower.endsWith(".csv");
+  });
 
   if (fileNames.length === 0) {
-    throw new Error(`No .xlsx files found in the directory: ${directoryPath}`);
+    throw new Error(`No .xlsx or .csv files found in: ${directoryPath}`);
   }
 
   for (const fileName of fileNames) {
     const filePath = path.join(directoryPath, fileName);
     console.log(`  - Processing file: ${fileName}`);
-    const workbook = xlsx.readFile(filePath);
-    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    const dataArray = xlsx.utils.sheet_to_json(worksheet, {
-      header: 1,
-      defval: null,
-    });
+
+    let dataArray;
+
+    if (fileName.toLowerCase().endsWith(".csv")) {
+      // --- THIS IS THE FIX ---
+      // Use a robust method for CSV files.
+      const fileContent = fs.readFileSync(filePath, "utf8");
+      const lines = fileContent.split(/\r?\n/); // Handles different line endings
+      dataArray = lines.map((line) => parseCsvLine(line));
+      console.log(
+        `    > Robustly parsed ${dataArray.length} raw rows from CSV.`
+      );
+      // --- END FIX ---
+    } else {
+      // Use the standard method for XLSX files.
+      const workbook = xlsx.readFile(filePath);
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      dataArray = xlsx.utils.sheet_to_json(worksheet, {
+        header: 1,
+        defval: null,
+        range: 0,
+      });
+      console.log(`    > Parsed ${dataArray.length} raw rows from XLSX.`);
+    }
+
     const dataRows = dataArray.slice(rowsToSkip);
     allDataRows.push(...dataRows);
-    console.log(`    > Found ${dataRows.length} data rows.`);
+    console.log(
+      `    > Found ${dataRows.length} data rows after skipping ${rowsToSkip} row(s).`
+    );
   }
 
   console.log(

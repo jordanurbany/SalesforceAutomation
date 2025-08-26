@@ -12,6 +12,8 @@
   "dependencies": {
     "dotenv": "^17.2.1",
     "jsforce": "^3.9.5",
+    "puppeteer": "^24.17.0",
+    "unzipper": "^0.12.3",
     "xlsx": "^0.18.5"
   }
 }
