@@ -15,8 +15,7 @@ const toNumber = (value) => {
   return isNaN(num) ? null : num;
 };
 
-// --- FINAL, CORRECTED COLUMN MAPPING ---
-// This has been meticulously rebuilt to prevent data shift errors.
+// --- FINAL, CORRECTED COLUMN MAPPING (Based on BW = index 74 for HIV) ---
 const COLUMN_MAP = {
   uniqueId: 0,
   firstName: 1,
@@ -51,78 +50,78 @@ const COLUMN_MAP = {
   homelessStartDate: 58,
   timesHomeless3Yrs: 59,
   monthsHomeless3Yrs: 60,
-  physicalDisability: 65,
-  longTermPhysical: 66,
-  developmentalDisability: 67,
-  chronicHealth: 68,
-  longTermChronic: 69,
-  hivAids: 70,
-  mentalHealth: 71,
-  longTermMental: 72,
-  substanceUse: 73,
-  longTermSubstance: 74,
-  dvSurvivor: 75,
-  whenDvOccurred: 76,
-  currentlyFleeing: 77,
-  incomeFromAnySource: 78,
-  earnedIncome: 79,
-  amountEarned: 80,
-  unemployment: 81,
-  amountUnemployment: 82,
-  ssi: 83,
-  amountSsi: 84,
-  ssdi: 85,
-  amountSsdi: 86,
-  vaServiceConnected: 87,
-  amountVaService: 88,
-  vaNonService: 89,
-  amountVaNonService: 90,
-  privateDisability: 91,
-  amountPrivateDisability: 92,
-  workersComp: 93,
-  amountWorkersComp: 94,
-  calworks: 95,
-  amountCalworks: 96,
-  caap: 97,
-  amountCaap: 98,
-  retirementSs: 99,
-  amountRetirementSs: 100,
-  pension: 101,
-  amountPension: 102,
-  childSupport: 103,
-  amountChildSupport: 104,
-  alimony: 105,
-  amountAlimony: 106,
-  otherIncome1: 107,
-  amountOther1: 108,
-  otherIncome2: 109,
-  totalMonthlyIncome: 110,
-  receivingNonCash: 111,
-  calfresh: 112,
-  wic: 113,
-  calworksChildcare: 114,
-  calworksTransport: 115,
-  otherCalworks: 116,
-  otherNonCash: 117,
-  sourceOtherNonCash: 118,
-  coveredByHealthIns: 119,
-  mediCal: 120,
-  medicare: 121,
-  stateChildrensIns: 122,
-  vha: 123,
-  employerIns: 124,
-  cobra: 125,
-  privatePayIns: 126,
-  stateHealthIns: 127,
-  indianHealth: 128,
-  otherHealthIns: 129,
-  sourceOtherHealth: 130,
-  sexualOrientation: 131,
-  otherSexualOrientation: 132,
-  unitAssignment: 133,
-  bedAssignment: 134,
-  occupancyStart: 135,
-  occupancyEnd: 136,
+  physicalDisability: 69, // Corrected Index
+  longTermPhysical: 70, // Corrected Index
+  developmentalDisability: 71, // Corrected Index
+  chronicHealth: 72, // Corrected Index
+  longTermChronic: 73, // Corrected Index
+  hivAids: 74, // Corrected Index (BW)
+  mentalHealth: 75, // Corrected Index
+  longTermMental: 76, // Corrected Index
+  substanceUse: 77, // Corrected Index
+  longTermSubstance: 78, // Corrected Index
+  dvSurvivor: 79, // Corrected Index
+  whenDvOccurred: 80, // Corrected Index
+  currentlyFleeing: 81, // Corrected Index
+  incomeFromAnySource: 82, // Corrected Index
+  earnedIncome: 83, // Corrected Index
+  amountEarned: 84, // Corrected Index
+  unemployment: 85,
+  amountUnemployment: 86,
+  ssi: 87,
+  amountSsi: 88,
+  ssdi: 89,
+  amountSsdi: 90,
+  vaServiceConnected: 91,
+  amountVaService: 92,
+  vaNonService: 93,
+  amountVaNonService: 94,
+  privateDisability: 95,
+  amountPrivateDisability: 96,
+  workersComp: 97,
+  amountWorkersComp: 98,
+  calworks: 99,
+  amountCalworks: 100,
+  caap: 101,
+  amountCaap: 102,
+  retirementSs: 103,
+  amountRetirementSs: 104,
+  pension: 105,
+  amountPension: 106,
+  childSupport: 107,
+  amountChildSupport: 108,
+  alimony: 109,
+  amountAlimony: 110,
+  otherIncome1: 111,
+  amountOther1: 112,
+  otherIncome2: 113,
+  totalMonthlyIncome: 114,
+  receivingNonCash: 115,
+  calfresh: 116,
+  wic: 117,
+  calworksChildcare: 118,
+  calworksTransport: 119,
+  otherCalworks: 120,
+  otherNonCash: 121,
+  sourceOtherNonCash: 122,
+  coveredByHealthIns: 123,
+  mediCal: 124,
+  medicare: 125,
+  stateChildrensIns: 126,
+  vha: 127,
+  employerIns: 128,
+  cobra: 129,
+  privatePayIns: 130,
+  stateHealthIns: 131,
+  indianHealth: 132,
+  otherHealthIns: 133,
+  sourceOtherHealth: 134,
+  sexualOrientation: 135,
+  otherSexualOrientation: 136,
+  unitAssignment: 137,
+  bedAssignment: 138,
+  occupancyStart: 139,
+  occupancyEnd: 140,
 };
 
 /**
@@ -148,7 +147,7 @@ function transformToContacts(dataRows) {
 }
 
 /**
- * FUNCTION 2: Prepares the detailed GNRL220Program__c records.
+ * FUNCTION 2: Prepares the detailed GNRL220Program__c records with the corrected mapping.
  */
 function transformToProgramDetails(dataRows, contactIdMap) {
   const records = [];
@@ -194,24 +193,13 @@ function transformToProgramDetails(dataRows, contactIdMap) {
         Housing_Move_In_Date__c: excelDateToJSDate(
           row[COLUMN_MAP.housingMoveInDate]
         ),
-        Arriving_from_an_Encampment__c: row[COLUMN_MAP.arrivingFromEncampment]
-          ? row[COLUMN_MAP.arrivingFromEncampment].trim()
+        Do_you_have_any_Special_Accommodations__c: row[
+          COLUMN_MAP.specialAccommodations
+        ]
+          ? row[COLUMN_MAP.specialAccommodations].trim()
           : null,
-        Prior_Living_Situation__c: row[COLUMN_MAP.priorLivingSituation]
-          ? row[COLUMN_MAP.priorLivingSituation].trim()
-          : null,
-        Length_of_Stay_in_Prior_Situation__c: row[COLUMN_MAP.lengthOfStayPrior]
-          ? row[COLUMN_MAP.lengthOfStayPrior].trim()
-          : null,
-        Homeless_Start_Date__c: excelDateToJSDate(
-          row[COLUMN_MAP.homelessStartDate]
-        ),
-        Number_of_Times_Homeless_3_Yrs__c: toNumber(
-          row[COLUMN_MAP.timesHomeless3Yrs]
-        ),
-        Total_Months_Homeless_3_Yrs__c: toNumber(
-          row[COLUMN_MAP.monthsHomeless3Yrs]
-        ),
+        Please_list_the_Accommodation_Needed__c:
+          row[COLUMN_MAP.listAccommodations],
         Physical_Disability__c: row[COLUMN_MAP.physicalDisability]
           ? row[COLUMN_MAP.physicalDisability].trim()
           : null,
@@ -247,6 +235,14 @@ function transformToProgramDetails(dataRows, contactIdMap) {
         Are_you_currently_fleeing__c: row[COLUMN_MAP.currentlyFleeing]
           ? row[COLUMN_MAP.currentlyFleeing].trim()
           : null,
+        Income_from_Any_Source__c: row[COLUMN_MAP.incomeFromAnySource]
+          ? row[COLUMN_MAP.incomeFromAnySource].trim()
+          : null,
+        Amount_Earned_Income__c: toNumber(row[COLUMN_MAP.amountEarned]),
+        Total_Monthly_Income_for_Individual__c: toNumber(
+          row[COLUMN_MAP.totalMonthlyIncome]
+        ),
+        CalFresh_Food_Stamps__c: toBoolean(row[COLUMN_MAP.calfresh]),
         Unit_Assignment__c: row[COLUMN_MAP.unitAssignment],
         Bed_Assignment__c: row[COLUMN_MAP.bedAssignment],
         Occupancy_Start_Date__c: excelDateToJSDate(
